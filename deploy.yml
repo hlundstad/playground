@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kub-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kub
+  template:
+    metadata:
+      labels:
+        app: kub
+    spec:
+      containers:
+      - name: kub
+        image: hlundstad/product-service
+        ports:
+        - containerPort: 8081
+        env:
+        - name: SIMPLE_SERVICE_VERSION
+          value: "0.9"

@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/alive"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {"id":"1","type":"something"},
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

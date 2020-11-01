@@ -1,0 +1,69 @@
+version: '3'
+services:
+  shop-service:
+    #name of image in dockerhub
+    image: hlundstad/shop-service
+#    environment:
+#      - SPRING_CONFIG_NAME=component-test-properties
+    #      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:8001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - ./etc/shop:/etc/shop
+    depends_on:
+#      - product-service
+      - mock-product-service
+    #to run
+    ports:
+      - "8080:8080"
+
+  #    ports:
+  #      - "9001:8001"
+
+  product-service:
+    image: hlundstad/product-service
+    #interkommunikasjon:externkommunikasjon. Ved curl fra terminal mot container, den siste porten treffes
+    ports:
+      - "8081:8081"
+#    environment:
+#      - "8081:8081"
+
+  mock-product-service:
+    image: rodolpheche/wiremock
+    volumes:
+      - ./local/shop-service-mock:/home/wiremock/mappings
+    command: java -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --global-response-templating
+    #External port: internal port??// TODO: Hva skjer her med portene: curl mot kontainer, vs mellom containere
+    ports:
+      - "8082:8080"
+
+  component-test-service:
+    image: rodolpheche/wiremock
+    volumes:
+        - ./local/shop-service-mock:/home/wiremock/mappings
+    command: java -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --global-response-templating
+        #External port: internal port
+    ports:
+      - "8083:8080"
+
+
+#  simpleWebServer-service:
+#    image: alpine:3.2
+#    command: [ "/bin/sh", "-c", "while true; do echo 'HTTP/1.1 200 OK\n\nHello World!' | nc -l -p 80; done" ]
+#    ports:
+#      - "8084:8084"
+
+
+
+#  wiremock-product:
+#    image: rodolpheche/wiremock
+#    ports:
+#      - "8001:8001"
+#    command: java -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --global-response-templating
+#    volumes:
+#      - ./src/wiremock:/home/wiremock
+#      - ./extension_dir:/var/wiremock/extensions
+
