@@ -1,4 +1,4 @@
-package com.example.providers;
+package com.lundstad.providers;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
