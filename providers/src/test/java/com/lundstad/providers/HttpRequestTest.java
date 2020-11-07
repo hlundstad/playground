@@ -6,6 +6,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -33,9 +36,11 @@ public class HttpRequestTest {
 
     @Test
     public void newProviderCreated() throws Exception {
-        Provider p = new Provider(++i, "Barak", "Obama");
-        Provider value= restTemplate.getForObject("/provider/create", Provider.class,p);
-        assertThat(value.id == 1) ;
+        Provider p1 = new Provider(++i, "Barak", "Obama");
+        HttpEntity<Provider> request = new HttpEntity<>(new Provider(++i, "Barak", "Obama"));
+        restTemplate.exchange("/provider/create", HttpMethod.PUT, request, Void.class);
+        Provider value= restTemplate.getForObject("/provider/{i}", Provider.class, i);
+        assertThat(value.id == i) ;
     }
 }
 
