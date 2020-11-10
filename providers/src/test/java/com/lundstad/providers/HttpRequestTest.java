@@ -42,5 +42,12 @@ public class HttpRequestTest {
         Provider value= restTemplate.getForObject("/provider/{i}", Provider.class, i);
         assertThat(value.id == i) ;
     }
+
+
+//    @Test
+//    public void getOneProviderByJooq() throws Exception {
+//        Provider value= restTemplate.getForObject("/newEmployee", Provider.class,1);
+//        assertThat(value.id == 1) ;
+//    }
 }
 
