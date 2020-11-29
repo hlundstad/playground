@@ -13,3 +13,5 @@ H2 console: <a href="http://localhost:8088/h2">localhost:8088/h2</a> <br>
 OpenAPi:  <a href="http://localhost:8088/swagger-ui/">localhost:8088/swagger-ui</a> <br>
 
 Run oracle in container: oracledockerrun.sh
+jdbc:oracle:thin:@localhost:1521/ORCLPDB1
+test_user/oracle123
