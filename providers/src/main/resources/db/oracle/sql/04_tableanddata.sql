@@ -1,13 +1,13 @@
 ALTER SESSION SET CONTAINER = ORCLPDB1;
 ALTER SESSION SET CURRENT_SCHEMA = test_user;
 
---DROP TABLE IF EXISTS provider;
-BEGIN
-  EXECUTE IMMEDIATE 'DROP TABLE provider';
-EXCEPTION
-  WHEN OTHERS THEN
-    NULL;
-END;
+-- --DROP TABLE IF EXISTS provider;
+-- BEGIN
+--   EXECUTE IMMEDIATE 'DROP TABLE provider';
+-- EXCEPTION
+--   WHEN OTHERS THEN
+--     NULL;
+-- END;
 
 
 
@@ -35,4 +35,5 @@ INSERT INTO provider (id,firstName, lastName, email) VALUES
 INSERT INTO provider (id,firstName, lastName, email) VALUES
 (provider_sequence.nextval,'Folrunsho', 'Alakija', 'fol@gmail1.com');
 
+commit ;
 
