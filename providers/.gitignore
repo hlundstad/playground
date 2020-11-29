@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/src/main/resources/db/oracle/sql/dbconfig/ORCLCDB/
+/src/main/resources/db/oracle/sql/ORCLCDB/
