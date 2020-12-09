@@ -4,11 +4,15 @@ import com.lundstad.employees.db.tables.tables.daos.EmployeeDao;
 import com.lundstad.employees.db.tables.tables.pojos.Employee;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
+import org.jooq.Result;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
+
+import static com.lundstad.employees.db.tables.tables.Employee.EMPLOYEE;
+import static com.lundstad.employees.db.tables.tables.EmployeeAddress.EMPLOYEE_ADDRESS;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -69,5 +73,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee getEmployee(int id) {
         return this.employeeDao.findById(id);
+    }
+
+    @Override
+    public Result<?>  getEmployeesAndAdresses() {
+        Result<?> result =dsl.select()
+                .from(EMPLOYEE.join(EMPLOYEE_ADDRESS)
+                        .on(EMPLOYEE.ID.eq(EMPLOYEE_ADDRESS.ID)))
+                .fetch();
+
+        return result;
     }
 }

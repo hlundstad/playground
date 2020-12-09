@@ -17,6 +17,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class HttpRequestTest {
 
@@ -39,16 +41,35 @@ public class HttpRequestTest {
                     "/employees",
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<List<Employee>>() {});
-            if(response != null && response.hasBody()){
-                List<Employee> employees= response.getBody();
-                assertThat(employees.size()==3);
+                    new ParameterizedTypeReference<List<Employee>>() {
+                    });
+            if (response != null && response.hasBody()) {
+                List<Employee> employees = response.getBody();
+                assertThat(employees.size() == 3);
             }
         } catch (RestClientException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
+//    @Test
+//    public void getAllEmployeesAndAdresses() throws Exception {
+//        try {
+//            ResponseEntity<Object> response = restTemplate.exchange(
+//                    "/all",
+//                    HttpMethod.GET,
+//                    null,
+//                    new ParameterizedTypeReference<Object>() {
+//                    });
+//            if (response != null && response.hasBody()) {
+//                Object result = response.getBody();
+//                assertThat(result!=null);
+//            }
+//        } catch (RestClientException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//    }
 
     public class EmployeeList {
         private List<Employee> employees;

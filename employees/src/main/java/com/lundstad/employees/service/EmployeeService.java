@@ -2,6 +2,7 @@ package com.lundstad.employees.service;
 
 import com.lundstad.employees.db.tables.tables.pojos.Employee;
 import com.lundstad.employees.exception.ResourceNotFoundException;
+import org.jooq.Result;
 
 import java.util.Collection;
 
@@ -16,4 +17,5 @@ public interface EmployeeService {
 
     Employee getEmployee(int id);
 
+    Result<?> getEmployeesAndAdresses();
 }
