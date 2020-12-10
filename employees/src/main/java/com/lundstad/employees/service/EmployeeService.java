@@ -7,7 +7,8 @@ import org.jooq.Result;
 import java.util.Collection;
 
 public interface EmployeeService {
-    Employee createEmployee(Employee product);
+
+    Employee createEmployee(com.lundstad.employees.model.Employee product);
 
     Employee updateEmployee(int id, Employee product);
 

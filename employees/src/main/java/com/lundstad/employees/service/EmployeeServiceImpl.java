@@ -2,11 +2,12 @@ package com.lundstad.employees.service;
 
 import com.lundstad.employees.db.tables.tables.daos.EmployeeDao;
 import com.lundstad.employees.db.tables.tables.pojos.Employee;
+import com.lundstad.employees.db.tables.tables.records.EmployeeRecord;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
@@ -18,9 +19,10 @@ import static com.lundstad.employees.db.tables.tables.EmployeeAddress.EMPLOYEE_A
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeDao employeeDao;
 
-//    @Autowired
+    @Autowired
     private final DSLContext dsl;
     private final TransactionTemplate transactionTemplate;
+    private com.lundstad.employees.db.tables.tables.Employee employee;
 
 
     public EmployeeServiceImpl(DSLContext dsl, Configuration jooqConfiguration,
@@ -45,11 +47,34 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    @Transactional
-    public Employee createEmployee(Employee newEmployee) {
-        this.employeeDao.insert(newEmployee);
-        System.out.println(newEmployee.getId());
-        return newEmployee;
+    public Employee createEmployee(com.lundstad.employees.model.Employee modelEmployee) {
+        EmployeeRecord rc = dsl.insertInto(EMPLOYEE)
+                .set(EMPLOYEE.FIRSTNAME, modelEmployee.getFirstname())
+                .set(EMPLOYEE.LASTNAME, modelEmployee.getLastname())
+                .set(EMPLOYEE.EMAIL, modelEmployee.getEmail())
+                .returning()
+                .fetchOne();
+
+
+//Denne virker setter permanent inn i db
+//        EmployeeRecord record = dsl.newRecord(EMPLOYEE);
+//        record.setFirstname(modelEmployee.getFirstname());
+//        record.setLastname((modelEmployee.getLastname()));
+//        record.setEmail(modelEmployee.getEmail());
+//        record.insert();
+
+//Denne virker også setter inn i db permanent
+//        int record = dsl.insertInto(Tables.EMPLOYEE,Tables.EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.EMAIL)
+//                .values(modelEmployee.getFirstname(), modelEmployee.getLastname(), modelEmployee.getEmail())
+//                .returning(Tables.EMPLOYEE.FIRSTNAME)
+//                .execute();
+//
+//Denne virker, men i dette tilfellet returnerer heller resultat fra record
+//        Result<Record> result = dsl.select()
+//                 .from(EMPLOYEE)
+//                 .where(Tables.EMPLOYEE.FIRSTNAME.eq(modelEmployee.getFirstname()))
+//                 .fetch();
+         return rc.into(Employee.class);
 
     }
 

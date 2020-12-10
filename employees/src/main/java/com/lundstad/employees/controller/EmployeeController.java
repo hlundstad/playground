@@ -40,7 +40,7 @@ public class EmployeeController {
 
 
     @PostMapping("/employees")
-    public Employee createEmployee(@Valid @RequestBody Employee employee) {
+    public Employee createEmployee(@Valid @RequestBody com.lundstad.employees.model.Employee employee) {
         return employeeServiceImpl.createEmployee(employee);
     }
 

@@ -11,10 +11,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static com.lundstad.employees.db.tables.tables.Employee.EMPLOYEE;
 import static org.junit.jupiter.api.Assertions.*;
 
+
+
+
 @SpringBootTest
 class DBTest {
     @Autowired
     EmployeeService employeeService;
+
 
     @Test
     void contextLoads() {
@@ -30,6 +34,13 @@ class DBTest {
         assertFalse( result.getValue(2, EmployeeAddress.EMPLOYEE_ADDRESS.STREET).equals("Kattehuset 11"));
 
 
+    }
+
+    @Test
+    public void testInsertIntoEmployee(){
+        com.lundstad.employees.model.Employee modelEmployee = new com.lundstad.employees.model.Employee(0,"Dole", "Duck", "dole1@email1.com");
+        com.lundstad.employees.db.tables.tables.pojos.Employee resultEmployee  = (com.lundstad.employees.db.tables.tables.pojos.Employee) employeeService.createEmployee(modelEmployee);
+        assertEquals(resultEmployee.getFirstname(),modelEmployee.getFirstname());
     }
 
 //    var typeRef = new ParameterizedTypeReference<List<Department>>() {

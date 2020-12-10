@@ -20,11 +20,13 @@ CREATE SEQUENCE employee_sequence
     CACHE 20
 ;
 
-INSERT INTO employee (id,firstName, lastName, email) VALUES
-(employee_sequence.nextval,'Donald', 'Duck', 'duck@gmail1.com');
-INSERT INTO employee (id,firstName, lastName, email) VALUES
-(employee_sequence.nextval,'Dolly', 'Duck', 'dolly@gmail1.com');
-INSERT INTO employee (id,firstName, lastName, email) VALUES
-(employee_sequence.nextval,'Mickey', 'Mouse', 'mouse@gmail1.com');
-
-COMMIT;
+create or replace TRIGGER trigger_insertEmployee
+    BEFORE INSERT ON employee
+    FOR EACH ROW
+DECLARE
+BEGIN
+    IF( :new.id IS NULL )
+    THEN
+        :new.id := EMPLOYEE_SEQUENCE.nextval;
+    END IF;
+END;

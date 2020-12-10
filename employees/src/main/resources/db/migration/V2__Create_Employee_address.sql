@@ -18,11 +18,3 @@ CREATE SEQUENCE employee_address_sequence
     CACHE 20
 ;
 
-
-INSERT INTO employee_address (id,employee_id, street, postnumber, mobile) VALUES
-(employee_address_sequence.nextval,1, 'Kvakkeveien 1',1000, '010203040');
-INSERT INTO employee_address (id,employee_id, street, postnumber, mobile) VALUES
-(employee_address_sequence.nextval,2, 'Apalveien 50',1000, '11223344');
-INSERT INTO employee_address (id,employee_id, street, postnumber, mobile) VALUES
-(employee_address_sequence.nextval,3, 'Kattehuset 10',1000, '11122233');
-
