@@ -1,5 +1,4 @@
 package com.lundstad.employees.controller;
-
 import com.lundstad.employees.db.tables.tables.pojos.Employee;
 import com.lundstad.employees.exception.ResourceNotFoundException;
 import com.lundstad.employees.service.EmployeeServiceImpl;
@@ -47,7 +46,7 @@ public class EmployeeController {
     @PutMapping("/employees/{id}")
     public ResponseEntity <Employee> updateEmployee(@PathVariable(value = "id") int employeeId,
                                                       @Valid @RequestBody Employee employeeDetails) throws ResourceNotFoundException {
-        Employee employee = employeeServiceImpl.updateEmployee(employeeId, employeeDetails);
+        Employee employee = employeeServiceImpl.updateEmployee(employeeDetails);
         return ResponseEntity.ok(employee);
     }
 

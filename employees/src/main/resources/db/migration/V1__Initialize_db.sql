@@ -2,9 +2,9 @@ ALTER SESSION SET CONTAINER = ORCLPDB1;
 
 CREATE TABLE employee (
     id INT NOT NULL,
-    firstName VARCHAR(250) NOT NULL,
-    lastName VARCHAR(250) NOT NULL,
-    email VARCHAR(250) DEFAULT NULL
+    firstName VARCHAR2(250),
+    lastName VARCHAR2(250),
+    email VARCHAR2(250)
                       );
 
 ALTER TABLE employee
