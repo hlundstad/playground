@@ -1,11 +1,12 @@
 
-docker run --name oracle19 \
--p 1521:1521 -p 5500:5500 \
+docker run --name oracle19a \
+-p 1522:1521 -p 5501:5500 \
 -e ORACLE_SID=ORCLCDB \
 -e ORACLE_PDB=ORCLPDB1 \
 -e ORACLE_PWD=oracle123 \
--v /Users/hegelundstad/Projects/Oracle/19c/data/sql:/docker-entrypoint-initdb.d/setup \
--d oracle/database:19.3.0-se2
+-v ~/Projects/myprojects/playground/oracle/sql:/docker-entrypoint-initdb.d/setup \
+-d oracle/database:19.3.0-ee
+#-d oracle/database:19.3.0-se2
 #-e INIT_SGA_SIZE=<your database SGA memory in MB> \
 #-e INIT_PGA_SIZE=<your database PGA memory in MB> \
 #-e ORACLE_CHARACTERSET=<your character set> \

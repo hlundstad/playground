@@ -5,3 +5,7 @@ Kjører Oracle19c i egen container<br>
 Flyway<br>
 Jooq<br>
 
+mvn flyway:clean 
+mvn flyway:migrate
+ 
+

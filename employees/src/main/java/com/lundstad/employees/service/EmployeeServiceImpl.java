@@ -6,8 +6,6 @@ import com.lundstad.employees.db.tables.tables.pojos.EmployeeAddress;
 import com.lundstad.employees.db.tables.tables.records.EmployeeRecord;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
-import org.jooq.Result;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -21,12 +19,12 @@ import static com.lundstad.employees.db.tables.tables.EmployeeAddress.EMPLOYEE_A
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeDao employeeDao;
 
-    @Autowired
+//    @Autowired
     private final DSLContext dsl;
     private final TransactionTemplate transactionTemplate;
     private com.lundstad.employees.db.tables.tables.Employee employee;
 
-
+//    @Autowired
     public EmployeeServiceImpl(DSLContext dsl, Configuration jooqConfiguration,
                                TransactionTemplate transactionTemplate) {
         this.employeeDao = new EmployeeDao(jooqConfiguration);
@@ -111,11 +109,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Result<?>  getEmployeesAndAdresses() {
-        Result<?> result =dsl.select()
+    public Map<Employee, List<EmployeeAddress>> getEmployeesAndAdresses() {
+        Map<Employee, List<EmployeeAddress>> result =dsl.select()
                 .from(EMPLOYEE.join(EMPLOYEE_ADDRESS)
                         .on(EMPLOYEE.ID.eq(EMPLOYEE_ADDRESS.EMPLOYEE_ID)))
-                .fetch();
+                .fetchGroups(
+                        r -> r.into(EMPLOYEE).into(Employee.class),
+                        r -> r.into(EMPLOYEE_ADDRESS).into(EmployeeAddress.class)
+                );
 
         return result;
     }
@@ -128,8 +129,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                         .on(EMPLOYEE.ID.eq(EMPLOYEE_ADDRESS.EMPLOYEE_ID)))
                 .where(EMPLOYEE.ID.eq(id))
                 .fetchGroups(
-                        r -> r.into(Employee.class),
-                        r -> r.into(EmployeeAddress.class)
+                        r -> r.into(EMPLOYEE).into(Employee.class),
+                        r -> r.into(EMPLOYEE_ADDRESS).into(EmployeeAddress.class)
                         );
 
 //        if (result.size() > 1) throw new Exception("Error: More than one result");
@@ -137,4 +138,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 //        Employee e = result.;
         return result;
     }
+
+
+
+
+
+
 }

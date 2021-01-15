@@ -1,22 +1,35 @@
 package com.lundstad.employees.controller;
+
 import com.lundstad.employees.db.tables.tables.pojos.Employee;
+import com.lundstad.employees.db.tables.tables.pojos.EmployeeAddress;
 import com.lundstad.employees.exception.ResourceNotFoundException;
-import com.lundstad.employees.service.EmployeeServiceImpl;
-import org.jooq.Result;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.lundstad.employees.service.EmployeeService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 
-
-@RestController
+@Controller
 //@RequestMapping("/api/v1")
 public class EmployeeController {
-    @Autowired
-    EmployeeServiceImpl employeeServiceImpl;
+    private final EmployeeService employeeServiceImpl;
+
+    public EmployeeController(EmployeeService employeeServiceImpl) {
+        this.employeeServiceImpl = employeeServiceImpl;
+    }
+
+
+
+
+//    @Autowired
+//    public void setEmployeeService(EmployeeServiceImpl employeeServiceImpl){
+//        this.employeeServiceImpl=employeeServiceImpl;
+//    }
+
 
     @GetMapping("/employees")
     public List <Employee> getAllEmployees() {
@@ -57,7 +70,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees/addresses")
-    public Result<?> getAllEmployeesAndAdress() {
+    public Map<Employee, List<EmployeeAddress>> getAllEmployeesAndAdress() {
         return employeeServiceImpl.getEmployeesAndAdresses();
     }
 }

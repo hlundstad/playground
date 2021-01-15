@@ -1,17 +1,27 @@
 package com.lundstad.employees;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.KeyDeserializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.lundstad.employees.controller.EmployeeController;
 import com.lundstad.employees.db.tables.tables.pojos.Employee;
+import com.lundstad.employees.service.EmployeeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.client.RestClientException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +31,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class HttpRequestTest {
+//    @Autowired
+//    private ApplicationContext context;
+
+    @Autowired
+    private static WebTestClient client;
+//    private static WebTestClient client;
+
+    @MockBean
+    private EmployeeService employeeService;
+
+    @Autowired
+    private EmployeeController employeeController;
 
     @LocalServerPort
     private int port;
@@ -28,10 +50,31 @@ public class HttpRequestTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+//    @BeforeEach
+//    public static void setUp() {
+//        client = WebTestClient.bindToController(employeeController)
+//                .build();
+//    }
+
+
+
     @Test
     public void getOneEmployee() throws Exception {
-        Employee value= restTemplate.getForObject("/employees/1", Employee.class,1);
-        assertThat(value.getId().equals(String.valueOf(1))) ;
+
+//        WebTestClient testClient = WebTestClient.bindToApplicationContext(context)
+//                .build();
+        client = WebTestClient.bindToController(employeeController)
+                .build();
+        Void response = client.get().uri("/employees/1")
+                .exchange()
+                .expectStatus().isCreated()
+                .expectHeader().valueEquals("Content-Type", "application/json")
+                .expectBody().isEmpty()
+                .getResponseBody();
+        response.toString();
+//
+//        Employee value= restTemplate.getForObject("/employees/1", Employee.class,1);
+//        assertThat(value.getId().equals(String.valueOf(1))) ;
     }
 
     @Test
@@ -52,24 +95,37 @@ public class HttpRequestTest {
             e.printStackTrace();
         }
     }
-//    @Test
-//    public void getAllEmployeesAndAdresses() throws Exception {
-//        try {
-//            ResponseEntity<Object> response = restTemplate.exchange(
-//                    "/all",
+    @Test
+    @JsonDeserialize(keyUsing = MapKeyDeserializer.class)
+    public void getAllEmployeesAndAdresses() throws Exception {
+        try {
+            client = WebTestClient.bindToController(employeeController)
+                    .build();
+            client.get().uri("/employees/addresses")
+                    .exchange()
+                    .expectStatus().isCreated()
+                    .expectHeader().valueEquals("Content-Type", "application/json")
+                    .expectBody().isEmpty();
+
+
+
+
+
+//            ResponseEntity<LinkedHashMap<Employee, ArrayList<EmployeeAddress>>> response = restTemplate.exchange(
+//                    "/employees/addresses",
 //                    HttpMethod.GET,
 //                    null,
-//                    new ParameterizedTypeReference<Object>() {
+//                    new ParameterizedTypeReference<>() {
 //                    });
 //            if (response != null && response.hasBody()) {
 //                Object result = response.getBody();
 //                assertThat(result!=null);
 //            }
-//        } catch (RestClientException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//    }
+        } catch (RestClientException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
     public class EmployeeList {
         private List<Employee> employees;
@@ -80,6 +136,18 @@ public class HttpRequestTest {
 
         // standard constructor and getter/setter
     }
+
+
+    public class MapKeyDeserializer extends KeyDeserializer {
+
+        private  final ObjectMapper mapper = new ObjectMapper();
+
+        @Override
+        public Object deserializeKey(String key, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+            return mapper.readValue(key, Employee.class);
+        }
+    }
+
 }
 
 //    @Test
