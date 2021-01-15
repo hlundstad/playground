@@ -23,28 +23,14 @@ public class EmployeeController {
     }
 
 
-
-
-//    @Autowired
-//    public void setEmployeeService(EmployeeServiceImpl employeeServiceImpl){
-//        this.employeeServiceImpl=employeeServiceImpl;
-//    }
-
-
     @GetMapping("/employees")
-    public List <Employee> getAllEmployees() {
+    public @ResponseBody List <Employee> getAllEmployees() {
         return employeeServiceImpl.getEmployees();
     }
 
-//    @GetMapping("/employees/{id}")
-//    public ResponseEntity<Employee> getEmployeeById(@PathVariable(value = "id") int employeeId)
-//            throws ResourceNotFoundException {
-//        Employee tempEmployee = employeeServiceImpl.getEmployee(employeeId);
-//        return ResponseEntity.ok().body(tempEmployee);
-//    }
+
     @GetMapping("/employees/{id}")
-    public Employee getEmployeeById(@PathVariable(value = "id") int employeeId)
-           // throws ResourceNotFoundException
+    public @ResponseBody Employee getEmployeeById(@PathVariable(value = "id") int employeeId)
     {
         Employee tempEmployee = employeeServiceImpl.getEmployee(employeeId);
         return tempEmployee;

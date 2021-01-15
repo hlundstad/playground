@@ -1,174 +1,54 @@
 package com.lundstad.employees;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.KeyDeserializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.lundstad.employees.controller.EmployeeController;
-import com.lundstad.employees.db.tables.tables.pojos.Employee;
-import com.lundstad.employees.service.EmployeeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.client.RestClientException;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+@SpringBootTest
 public class HttpRequestTest {
-//    @Autowired
-//    private ApplicationContext context;
 
     @Autowired
-    private static WebTestClient client;
-//    private static WebTestClient client;
-
-    @MockBean
-    private EmployeeService employeeService;
-
-    @Autowired
-    private EmployeeController employeeController;
-
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-//    @BeforeEach
-//    public static void setUp() {
-//        client = WebTestClient.bindToController(employeeController)
-//                .build();
-//    }
-
-
+    private MockMvc mvc;
 
     @Test
     public void getOneEmployee() throws Exception {
-
-//        WebTestClient testClient = WebTestClient.bindToApplicationContext(context)
-//                .build();
-        client = WebTestClient.bindToController(employeeController)
-                .build();
-        Void response = client.get().uri("/employees/1")
-                .exchange()
-                .expectStatus().isCreated()
-                .expectHeader().valueEquals("Content-Type", "application/json")
-                .expectBody().isEmpty()
-                .getResponseBody();
-        response.toString();
-//
-//        Employee value= restTemplate.getForObject("/employees/1", Employee.class,1);
-//        assertThat(value.getId().equals(String.valueOf(1))) ;
+        String uri = "/employees/1";
+//        mvc.perform(get("/greeting")).andDo(print()).andExpect(status().isOk())
+//                .andExpect(content().string(containsString("Denne applikasjonen returnerer produkter")));
+        mvc.perform( MockMvcRequestBuilders
+                .get(uri)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value("1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstname").value("Donald"));
     }
 
     @Test
-    public void getAllEmployees() throws Exception {
-        try {
-            ResponseEntity<List<Employee>> response = restTemplate.exchange(
-                    "/employees",
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<List<Employee>>() {
-                    });
-            if (response != null && response.hasBody()) {
-                List<Employee> employees = response.getBody();
-                assertThat(employees.size() == 3);
-            }
-        } catch (RestClientException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    public void getAllEmployee() throws Exception {
+        String uri = "/employees";
+//        mvc.perform(get("/greeting")).andDo(print()).andExpect(status().isOk())
+//                .andExpect(content().string(containsString("Denne applikasjonen returnerer produkter")));
+        mvc.perform( MockMvcRequestBuilders
+                .get(uri)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].id").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value("1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].firstname").value("Donald"));
     }
-    @Test
-    @JsonDeserialize(keyUsing = MapKeyDeserializer.class)
-    public void getAllEmployeesAndAdresses() throws Exception {
-        try {
-            client = WebTestClient.bindToController(employeeController)
-                    .build();
-            client.get().uri("/employees/addresses")
-                    .exchange()
-                    .expectStatus().isCreated()
-                    .expectHeader().valueEquals("Content-Type", "application/json")
-                    .expectBody().isEmpty();
-
-
-
-
-
-//            ResponseEntity<LinkedHashMap<Employee, ArrayList<EmployeeAddress>>> response = restTemplate.exchange(
-//                    "/employees/addresses",
-//                    HttpMethod.GET,
-//                    null,
-//                    new ParameterizedTypeReference<>() {
-//                    });
-//            if (response != null && response.hasBody()) {
-//                Object result = response.getBody();
-//                assertThat(result!=null);
-//            }
-        } catch (RestClientException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    public class EmployeeList {
-        private List<Employee> employees;
-
-        public EmployeeList() {
-            employees = new ArrayList<>();
-        }
-
-        // standard constructor and getter/setter
-    }
-
-
-    public class MapKeyDeserializer extends KeyDeserializer {
-
-        private  final ObjectMapper mapper = new ObjectMapper();
-
-        @Override
-        public Object deserializeKey(String key, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-            return mapper.readValue(key, Employee.class);
-        }
-    }
-
 }
-
-//    @Test
-//    public void wrongEmail() throws Exception {
-//        //TODO lag test
-//        Provider value= restTemplate.getForObject("/provider/create", Provider.class,1);
-//        assertThat(i == 4) ;
-//    }
-
-//    @Test
-//    public void newProviderCreated() throws Exception {
-//        Provider p1 = new Provider(++i, "Barak", "Obama");
-//        HttpEntity<Provider> request = new HttpEntity<>(new Provider(++i, "Barak", "Obama"));
-//        restTemplate.exchange("/provider/create", HttpMethod.PUT, request, Void.class);
-//        Provider value= restTemplate.getForObject("/provider/{i}", Provider.class, i);
-//        assertThat(value.id == i) ;
-//    }
-//
-
-//    @Test
-//    public void getOneProviderByJooq() throws Exception {
-//        Provider value= restTemplate.getForObject("/newEmployee", Provider.class,1);
-//        assertThat(value.id == 1) ;
-//    }
