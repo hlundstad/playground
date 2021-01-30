@@ -2,7 +2,7 @@ package com.lundstad.employees;
 
 import com.lundstad.employees.db.tables.tables.pojos.Employee;
 import com.lundstad.employees.db.tables.tables.pojos.EmployeeAddress;
-import com.lundstad.employees.service.EmployeeService;
+import com.lundstad.employees.service.EmployeeServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,29 +20,29 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class DBTest {
     @Autowired
-    EmployeeService employeeService;
+    EmployeeServiceImpl employeeServiceImp;
 
+
+//    @Test
+//    void contextLoads() {
+//    }
 
     @Test
-    void contextLoads() {
-    }
-
-    @Test
-    public void testGeTAllEmployeeAndAddresses(){
-        Map<Employee, List<EmployeeAddress>> result  =  employeeService.getEmployeesAndAdresses();
+    void testGeTAllEmployeeAndAddresses(){
+        Map<Employee, List<EmployeeAddress>> result  =  employeeServiceImp.getEmployeesAndAdresses();
         if (result.size() == 3) {
 //            result.forEach((employee, employeeAddresses) -> {
             result.forEach((employee, employeeAddresses) -> {
                         assertNotNull(employee);
                         assertNotNull(employeeAddresses);
-                        if ((BigDecimal)employee.getId()==new BigDecimal(1))
-                        assertTrue(employeeAddresses.size() == 2);
+                        if (employee.getId() ==new BigDecimal(1))
+                        assertEquals(2,employeeAddresses.size());
                         employeeAddresses.forEach(employeeAddress -> {
                             if (((BigDecimal) employeeAddress.getId()).intValue() == 1) {
-                                assertTrue((employeeAddress.getStreet()).equals("Kvakkeveien 1"));
+                                assertEquals("Kvakkeveien 1", employeeAddress.getStreet());
                             }
                             if (((BigDecimal) employeeAddress.getId()).intValue() == 2) {
-                                assertTrue((employeeAddress.getStreet()).equals("Hytteveien 100"));
+                                assertEquals("Hytteveien 100",employeeAddress.getStreet());
                             }
                         });
 
@@ -69,18 +69,18 @@ class DBTest {
 
     @Test
 //    @Rollback(true)
-    public void testInsertIntoEmployee(){
+    void testInsertIntoEmployee(){
         com.lundstad.employees.model.Employee modelEmployee = new com.lundstad.employees.model.Employee(null,"Dole", "Duck", "dole1@email1.com");
-        com.lundstad.employees.db.tables.tables.pojos.Employee resultEmployee  = (com.lundstad.employees.db.tables.tables.pojos.Employee) employeeService.createEmployee(modelEmployee);
+        com.lundstad.employees.db.tables.tables.pojos.Employee resultEmployee  = employeeServiceImp.createEmployee(modelEmployee);
         assertEquals(resultEmployee.getFirstname(),modelEmployee.getFirstname());
     }
 
 
     @Test
 //    @Rollback(true)
-    public void updateEmployee(){
+    void updateEmployee(){
         Employee jooqEmployee = new Employee(1,"Donald1", null, null);
-        Employee resultEmployee  = employeeService.updateEmployee(jooqEmployee);
+        Employee resultEmployee  = employeeServiceImp.updateEmployee(jooqEmployee);
         assertEquals(resultEmployee.getFirstname(),jooqEmployee.getFirstname());
         assertNotNull(resultEmployee.getLastname());
     }

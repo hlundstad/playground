@@ -16,6 +16,6 @@ public class HealthCheck implements HealthIndicator {
     @Override
     public Health health() {
         //Check autowire
-        return (employeeServiceImpl.getEmployees().size() < 0 ? Health.down().build() : Health.up().build());
+        return (employeeServiceImpl.getEmployees().isEmpty() ? Health.down().build() : Health.up().build());
     }
 }

@@ -15,13 +15,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
-public class HttpRequestTest {
+class HttpRequestTest {
 
     @Autowired
     private MockMvc mvc;
 
     @Test
-    public void getOneEmployee() throws Exception {
+    void getOneEmployee() throws Exception {
         String uri = "/employees/1";
 //        mvc.perform(get("/greeting")).andDo(print()).andExpect(status().isOk())
 //                .andExpect(content().string(containsString("Denne applikasjonen returnerer produkter")));
@@ -36,7 +36,7 @@ public class HttpRequestTest {
     }
 
     @Test
-    public void getAllEmployee() throws Exception {
+    void getAllEmployee() throws Exception {
         String uri = "/employees";
 //        mvc.perform(get("/greeting")).andDo(print()).andExpect(status().isOk())
 //                .andExpect(content().string(containsString("Denne applikasjonen returnerer produkter")));

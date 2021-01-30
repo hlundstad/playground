@@ -23,5 +23,5 @@ public interface EmployeeService {
 
     Map<Employee, List<EmployeeAddress>> getEmployeesAndAdresses();
 
-    Map<Employee, List<EmployeeAddress>> getEmployeesAndAdresses(Integer id) throws Exception;
+    Map<Employee, List<EmployeeAddress>> getEmployeesAndAdresses(Integer id);
 }

@@ -21,8 +21,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 //    @Autowired
     private final DSLContext dsl;
-    private final TransactionTemplate transactionTemplate;
-    private com.lundstad.employees.db.tables.tables.Employee employee;
+    final TransactionTemplate transactionTemplate;
+    com.lundstad.employees.db.tables.tables.Employee employee;
 
 //    @Autowired
     public EmployeeServiceImpl(DSLContext dsl, Configuration jooqConfiguration,
@@ -110,21 +110,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Map<Employee, List<EmployeeAddress>> getEmployeesAndAdresses() {
-        Map<Employee, List<EmployeeAddress>> result =dsl.select()
+        return dsl.select()
                 .from(EMPLOYEE.join(EMPLOYEE_ADDRESS)
                         .on(EMPLOYEE.ID.eq(EMPLOYEE_ADDRESS.EMPLOYEE_ID)))
                 .fetchGroups(
                         r -> r.into(EMPLOYEE).into(Employee.class),
                         r -> r.into(EMPLOYEE_ADDRESS).into(EmployeeAddress.class)
                 );
-
-        return result;
     }
 
     @Override
-    public Map<Employee, List<EmployeeAddress>> getEmployeesAndAdresses(Integer id) throws Exception {
-        Map<Employee, List<EmployeeAddress>> result =
-                dsl.select()
+    public Map<Employee, List<EmployeeAddress>> getEmployeesAndAdresses(Integer id) {
+        return dsl.select()
                 .from(EMPLOYEE.join(EMPLOYEE_ADDRESS)
                         .on(EMPLOYEE.ID.eq(EMPLOYEE_ADDRESS.EMPLOYEE_ID)))
                 .where(EMPLOYEE.ID.eq(id))
@@ -133,10 +130,15 @@ public class EmployeeServiceImpl implements EmployeeService {
                         r -> r.into(EMPLOYEE_ADDRESS).into(EmployeeAddress.class)
                         );
 
-//        if (result.size() > 1) throw new Exception("Error: More than one result");
+    }
 
-//        Employee e = result.;
-        return result;
+    //============For enkel testing av Parameteriserte tester  ==================
+    public   boolean isOdd(int number) {
+        return number % 2 != 0;
+    }
+
+    public static boolean isBlank(String input) {
+        return input == null || input.trim().isEmpty();
     }
 
 
