@@ -2,15 +2,15 @@ package com.lundstad.employees.service;
 
 import com.lundstad.employees.db.tables.tables.daos.EmployeeDao;
 import com.lundstad.employees.db.tables.tables.pojos.Employee;
+import com.lundstad.employees.db.tables.tables.pojos.EmployeeAddress;
 import com.lundstad.employees.db.tables.tables.records.EmployeeRecord;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
-import org.jooq.Result;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.lundstad.employees.db.tables.tables.Employee.EMPLOYEE;
 import static com.lundstad.employees.db.tables.tables.EmployeeAddress.EMPLOYEE_ADDRESS;
@@ -19,12 +19,12 @@ import static com.lundstad.employees.db.tables.tables.EmployeeAddress.EMPLOYEE_A
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeDao employeeDao;
 
-    @Autowired
+//    @Autowired
     private final DSLContext dsl;
-    private final TransactionTemplate transactionTemplate;
-    private com.lundstad.employees.db.tables.tables.Employee employee;
+    final TransactionTemplate transactionTemplate;
+    com.lundstad.employees.db.tables.tables.Employee employee;
 
-
+//    @Autowired
     public EmployeeServiceImpl(DSLContext dsl, Configuration jooqConfiguration,
                                TransactionTemplate transactionTemplate) {
         this.employeeDao = new EmployeeDao(jooqConfiguration);
@@ -37,14 +37,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
-
-    public void insertBook(Employee employee){
-//        context
-//                .insertInto(Tables.EMPLOYEES, Tables.EMPLOYEE.FIRSTNAME, Tables.EMPLOYEE.LASTNAME,
-//                        Tables.EMPLOYEE.EMAIL)
-//                .values(employee.getFirstName(), employee.getLastName(),employee.getEmail())
-//                .execute();
-    }
 
     @Override
     public Employee createEmployee(com.lundstad.employees.model.Employee modelEmployee) {
@@ -79,9 +71,29 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee updateEmployee(int id, Employee employee) {
-        this.employeeDao.update(employee);
-        return employee;
+    public Employee updateEmployee(Employee updateEmployee) {
+//        Fungerer, men oppdaterer hele raden
+//        this.employeeDao.update(employee);
+
+//        Virker
+//        EmployeeRecord rc = dsl.update(EMPLOYEE)
+//                .set(EMPLOYEE.FIRSTNAME, employee.getFirstname())
+//                .set(EMPLOYEE.LASTNAME, employee.getLastname())
+//                .set(EMPLOYEE.EMAIL, employee.getEmail())
+//                .returning()
+//                .fetchOne();
+
+        Employee originalEmployee = employeeDao.findById(updateEmployee.getId());
+
+        if ( updateEmployee.getFirstname()!=null)
+            originalEmployee.setFirstname(updateEmployee.getFirstname());
+        if ( updateEmployee.getLastname()!=null)
+            originalEmployee.setLastname(updateEmployee.getLastname());
+        if ( updateEmployee.getEmail()!=null)
+            originalEmployee.setEmail(updateEmployee.getEmail());
+
+        this.employeeDao.update(originalEmployee);
+        return employeeDao.findById(originalEmployee.getId());
 
     }
 
@@ -89,11 +101,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void deleteEmployee(int id) {
         this.employeeDao.deleteById(id);
     }
-//
-//    @Override
-//    public Collection<Employee> getEmployees() {
-//        return null;
-//    }
+
 
     @Override
     public Employee getEmployee(int id) {
@@ -101,12 +109,41 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Result<?>  getEmployeesAndAdresses() {
-        Result<?> result =dsl.select()
+    public Map<Employee, List<EmployeeAddress>> getEmployeesAndAdresses() {
+        return dsl.select()
                 .from(EMPLOYEE.join(EMPLOYEE_ADDRESS)
-                        .on(EMPLOYEE.ID.eq(EMPLOYEE_ADDRESS.ID)))
-                .fetch();
-
-        return result;
+                        .on(EMPLOYEE.ID.eq(EMPLOYEE_ADDRESS.EMPLOYEE_ID)))
+                .fetchGroups(
+                        r -> r.into(EMPLOYEE).into(Employee.class),
+                        r -> r.into(EMPLOYEE_ADDRESS).into(EmployeeAddress.class)
+                );
     }
+
+    @Override
+    public Map<Employee, List<EmployeeAddress>> getEmployeesAndAdresses(Integer id) {
+        return dsl.select()
+                .from(EMPLOYEE.join(EMPLOYEE_ADDRESS)
+                        .on(EMPLOYEE.ID.eq(EMPLOYEE_ADDRESS.EMPLOYEE_ID)))
+                .where(EMPLOYEE.ID.eq(id))
+                .fetchGroups(
+                        r -> r.into(EMPLOYEE).into(Employee.class),
+                        r -> r.into(EMPLOYEE_ADDRESS).into(EmployeeAddress.class)
+                        );
+
+    }
+
+    //============For enkel testing av Parameteriserte tester  ==================
+    public   boolean isOdd(int number) {
+        return number % 2 != 0;
+    }
+
+    public static boolean isBlank(String input) {
+        return input == null || input.trim().isEmpty();
+    }
+
+
+
+
+
+
 }

@@ -1,3 +1,4 @@
+ALTER SESSION SET CONTAINER = ORCLPDB1;
 CREATE TABLE employee_address
 (   id numeric(10) not nulL,
     employee_id INT NOT NULL,

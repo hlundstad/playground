@@ -18,9 +18,7 @@ public class EmployeesApplication {
 
     @Bean
     ApplicationRunner applicationRunner(Environment environment) {
-        return args -> {
+        return args ->
             log.info("message from application.properties " + environment.getProperty("message-from-application-properties"));
-        };
-    }
-
+        }
 }
