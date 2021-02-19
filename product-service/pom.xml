@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.4.RELEASE</version>
+        <version>2.4.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.lundstad.products</groupId>
@@ -21,14 +21,9 @@
         <serviceName>product-service</serviceName>
         <apiBasePackage>com.lundstad.products.Product</apiBasePackage>
         <apiName>${serviceName}</apiName>
-<!--        <image>gcr.io/${env.PROJECT_ID}/${project.artifactId}:${project.version}</image>-->
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jersey</artifactId>
-        </dependency>
         <!--Swagger / OpenApi-->
         <!--https://github.com/swagger-api/swagger-core/tree/master/modules/swagger-maven-plugin-->
         <dependency>
@@ -41,21 +36,6 @@
             <artifactId>javax.ws.rs-api</artifactId>
             <version>2.1.1</version>
         </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-        <!--End Swagger / OpenApi-->
-<!--        <dependency>-->
-<!--            <groupId>com.jayway.jsonpath</groupId>-->
-<!--            <artifactId>json-path</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.openapitools</groupId>-->
-<!--            <artifactId>jackson-databind-nullable</artifactId>-->
-<!--            <version>${jackson-databind-nullable.version}</version>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -103,6 +83,27 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <configuration>
+                    <to>
+                        <image>hlundstad/product-service:${project.version}</image>
+                    </to>
+                    <container>
+                        <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+                    </container>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <!--<goal>build</goal>-->
+                            <goal>dockerBuild</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
@@ -147,23 +148,6 @@
                     <groupId>io.swagger.core.v3</groupId>
                     <artifactId>swagger-maven-plugin</artifactId>
                     <version>${swagger-openapi.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>com.google.cloud.tools</groupId>
-                    <artifactId>jib-maven-plugin</artifactId>
-                    <configuration>
-                        <to>
-                            <image>hlundstad/product-service</image>
-                        </to>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>build</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
 
