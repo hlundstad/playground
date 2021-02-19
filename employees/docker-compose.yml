@@ -1,0 +1,22 @@
+version: '3'
+services:
+  oracle:
+    container_name: shop_oracle19
+    image: oracle/database:19.3.0-ee
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    environment:
+      - "ORACLE_SID=ORCLCDB"
+      - "ORACLE_PDB=ORCLPDB1"
+      - "ORACLE_PWD=oracle123"
+    restart: always
+    networks:
+      - shop_network
+    volumes:
+      - ~/Projects/myprojects/playground/oracle/sql:/docker-entrypoint-initdb.d/setup
+networks:
+  shop_network:
+  default:
+    external:
+      name: bridge

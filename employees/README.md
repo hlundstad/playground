@@ -10,5 +10,7 @@ MockMvc<Br>
 mvn flyway:clean 
 mvn flyway:migrate
  
+RUN apt-get update && apt-get install curl -y
 
 localhost:8090/actuator/health 
+mvn clean install -Ddb.url=jdbc:oracle:thin:@localhost:1521/ORCLPDB1 -Dspring.datasource.url=jdbc:oracle:thin:@localhost:1521/ORCLPDB1 

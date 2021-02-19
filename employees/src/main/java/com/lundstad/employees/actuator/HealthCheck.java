@@ -15,7 +15,21 @@ public class HealthCheck implements HealthIndicator {
 
     @Override
     public Health health() {
-        //Check autowire
-        return (employeeServiceImpl.getEmployees().isEmpty() ? Health.down().build() : Health.up().build());
+        int errorCode = check(); // perform some specific health check
+        if (errorCode<0){
+            return Health.down().build();
+        }
+        else{
+            return  Health.up().withDetail("All good, server is up", errorCode).build();
+        }
     }
+
+
+    public int check() {
+        int errorCode = employeeServiceImpl.getEmployees().isEmpty()? -1:1;
+        System.out.println(employeeServiceImpl.getEmployees().toString());
+        System.out.println(errorCode);
+        return errorCode;
+    }
+
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +24,10 @@ public class EmployeeController {
     }
 
 
-    @GetMapping("/employees")
+    @GetMapping(value = "/employees")
     public @ResponseBody List <Employee> getAllEmployees() {
+        Collection<Employee> values = employeeServiceImpl.getEmployees();
+        System.out.println("employees: " + values.size());
         return employeeServiceImpl.getEmployees();
     }
 
@@ -54,7 +57,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees/addresses")
-    public Map<Employee, List<EmployeeAddress>> getAllEmployeesAndAdress() {
+    public  @ResponseBody Map<Employee, List<EmployeeAddress>> getAllEmployeesAndAdress() {
         return employeeServiceImpl.getEmployeesAndAdresses();
     }
 }

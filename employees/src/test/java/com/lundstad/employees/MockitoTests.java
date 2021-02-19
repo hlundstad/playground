@@ -26,9 +26,6 @@ class MockitoTests {
     //    @Spy
     @MockBean
     private EmployeeService employeeService;
-
-
-
     private List<Employee> employeesList;
     @BeforeEach()
     void init() {
