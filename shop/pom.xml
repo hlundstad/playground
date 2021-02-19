@@ -26,7 +26,7 @@
         <spring.cloud.starter.openfeig.version>2.2.5.RELEASE</spring.cloud.starter.openfeig.version>
         <spring.boot.starter.test.version>2.3.1.RELEASE</spring.boot.starter.test.version>
         <api-spec>demo-api-v1</api-spec>
-        <jib-maven-plugin.version>2.6.0</jib-maven-plugin.version>
+        <jib-maven-plugin.version>2.7.0</jib-maven-plugin.version>
 <!--        <start-class>com.lundstad.playground.PlaygroundApplication</start-class>-->
         <skip.docker>false</skip.docker>
     </properties>

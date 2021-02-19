@@ -1,54 +1,90 @@
 version: '3'
-services:
-  shop-service:
-    #name of image in dockerhub
-    image: hlundstad/shop-service
-#    environment:
-#      - SPRING_CONFIG_NAME=component-test-properties
-    #      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:8001"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 10s
-      timeout: 10s
-      retries: 3
-    volumes:
-      - ./etc/shop:/etc/shop
-    depends_on:
-#      - product-service
-      - mock-product-service
-    #to run
-    ports:
-      - "8080:8080"
 
-  #    ports:
-  #      - "9001:8001"
+services:
+#  shop-service:
+#    #name of image in dockerhub
+#    image: hlundstad/shop-service
+##    environment:
+##      - SPRING_CONFIG_NAME=component-test-properties
+#    #      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:8001"
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+#      interval: 10s
+#      timeout: 10s
+#      retries: 3
+#    volumes:
+#      - ./etc/shop:/etc/shop
+##    depends_on:
+##      - product-service
+##      - mock-product-service
+#    ports:
+#      - "8084:8080"
+
 
   product-service:
-    image: hlundstad/product-service
-    #interkommunikasjon:externkommunikasjon. Ved curl fra terminal mot container, den siste porten treffes
+    image: hlundstad/product-service:0.0.1-SNAPSHOT
+#    image: 3dc9684ffc45
     ports:
       - "8081:8081"
-#    environment:
-#      - "8081:8081"
+    networks:
+      - employees_shop_network
 
   mock-product-service:
     image: rodolpheche/wiremock
+    networks:
+      - employees_shop_network
     volumes:
       - ./local/shop-service-mock:/home/wiremock/mappings
     command: java -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --global-response-templating
-    #External port: internal port??// TODO: Hva skjer her med portene: curl mot kontainer, vs mellom containere
     ports:
       - "8082:8080"
 
-  component-test-service:
-    image: rodolpheche/wiremock
-    volumes:
-        - ./local/shop-service-mock:/home/wiremock/mappings
-    command: java -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --global-response-templating
-        #External port: internal port
-    ports:
-      - "8083:8080"
+#  component-test-service:
+#    image: rodolpheche/wiremock
+#    volumes:
+#        - ./local/shop-service-mock:/home/wiremock/mappings
+#    command: java -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --global-response-templating
+#    ports:
+#      - "8083:8080"
 
+  employees-service:
+    image: hlundstad/employees-service:0.0.1-SNAPSHOT
+    ports:
+      - "8090:8090"
+    networks:
+      - employees_shop_network
+#    depends_on:
+#      oracle:
+#        condition: service_healthy
+
+#  oracle:
+#    image: 12b600e3ea4b
+#    ports:
+#      - "1522:1522"
+#      environment:
+#        USERS: ACTIVITI
+#        PASSWORDS: ACTIVITI
+#    healthcheck:
+#      test: "exit 0"
+#    tty: true
+#    environment:
+##      - DATABASE_HOST= oracle-database
+#      - SPRING_DATASOURCE_URL= "jdbc:oracle:thin:@host.docker.internal:1521:ORCLPDB1"
+#      - SPRING_DATASOURCE.DRIVERCLASSNAME= "oracle.jdbc.OracleDriver"
+#      - SPRING_DATA_ORALCE_HOST= "host.docker.internal"
+#
+#    environment:
+#      - WAIT_HOSTS=oracle:1521
+#      - WAIT_HOSTS_TIMEOUT=300
+#      - WAIT_SLEEP_INTERVAL=30
+#      - WAIT_HOST_CONNECT_TIMEOUT=30
+#networks:
+#  default:
+#    external:
+#      name: shop_network
+networks:
+  employees_shop_network:
+    external: true
 
 #  simpleWebServer-service:
 #    image: alpine:3.2
@@ -66,4 +102,32 @@ services:
 #    volumes:
 #      - ./src/wiremock:/home/wiremock
 #      - ./extension_dir:/var/wiremock/extensions
+
+#---------------------------
+#version: '3.7'
+#services:
+#  oracle-database:
+#    image: Your oracleImage
+#    environment:
+#      //define your oracle db settings..eg default password,users etc
+#    volumes:
+#      - /data/oracle
+#    ports:
+#      - 127.0.0.1: 32769:32769/tcp
+#
+#  api1:
+#    image: api1
+#    ports:
+#      - 127.0.0.1:9090:9090/tcp
+#    depends_on:
+#      - oracle-database
+#    environment:
+#      - DATABASE_HOST=oracle-database
+#      - DATABASE_USER= username
+#      - DATABASE_PASSWORD=password
+#      - DATABASE_NAME= NameOfYourDatabase
+#      - DATABASE_PORT= 32769
+#https://stackoverflow:com/questions/60051360/dockerized-spring-boot-app-cant-connect-to-database-container:
+# jdbc:oracle:thin:@host.docker.internal:1521:ORCLCDB
+#  https://forums.docker.com/t/network-adapter-error-when-accessing-a-web-app-from-my-desktop-on-a-container-in-the-same-network-as-the-oracle-database-container/83310
 
