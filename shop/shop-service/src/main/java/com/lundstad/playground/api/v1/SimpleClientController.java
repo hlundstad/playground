@@ -40,7 +40,7 @@ public class SimpleClientController {
     @RequestMapping("/quora")
     public String quora() {
         Quote quote = template.getForObject(
-                "https://gturnquist-quoters.cfapps.io/api/random", Quote.class);
+                "https://freequote.herokuapp.com/", Quote.class);
         return quote.getValue().toString();
     }
 

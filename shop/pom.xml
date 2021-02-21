@@ -35,7 +35,13 @@
         <module>shop-service</module>
         <module>component-test</module>
     </modules>
-
+<!--<dependencies>-->
+<!--    <dependency>-->
+<!--        <groupId>com.lundstad</groupId>-->
+<!--        <artifactId>employees</artifactId>-->
+<!--        <version>0.0.1-SNAPSHOT</version>-->
+<!--    </dependency>-->
+<!--</dependencies>-->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -65,6 +71,7 @@
 <!--                <artifactId>springdoc-openapi-ui</artifactId>-->
 <!--                <version>1.2.32</version>-->
 <!--            </dependency>-->
+
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
@@ -103,34 +110,15 @@
         </dependencies>
     </dependencyManagement>
   <build>
-      <pluginManagement>
-          <plugins>
-              <plugin>
-                  <artifactId>maven-resources-plugin</artifactId>
-                  <version>${maven-resources-plugin.version}</version>
-              </plugin>
-<!--              <plugin>-->
-<!--                  <groupId>io.swagger.core.v3</groupId>-->
-<!--                  <artifactId>swagger-maven-plugin</artifactId>-->
-<!--                  <version>${swagger-openapi.version}</version>-->
-<!--              </plugin>-->
-              <plugin>
-                  <groupId>org.springframework.boot</groupId>
-                  <artifactId>spring-boot-maven-plugin</artifactId>
-                  <configuration>
-<!--                      <skip>true</skip>-->
-                      <mainClass>com.lundstad.playground.PlaygroundApplication</mainClass>
-                  </configuration>
-              </plugin>
-
-<!--              https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin#build-to-docker-daemon-->
-
-              <plugin>
+      <plugins>
+          <plugin>
+              <!-- https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin#build-to-docker-daemon-->
+                  <!--  https://github.com/GoogleContainerTools/jib/blob/master/jib-maven-plugin/README.md#additional-build-artifacts-->
                   <groupId>com.google.cloud.tools</groupId>
                   <artifactId>jib-maven-plugin</artifactId>
                   <version>${jib-maven-plugin.version}</version>
                   <configuration>
-<!--                      <containerizingMode>packaged</containerizingMode>-->
+                      <!--                      <containerizingMode>packaged</containerizingMode>-->
                       <skip>${skip.docker}</skip>
                       <!--                          <from>-->
                       <!--                              <image>openjdk:alpine</image>-->
@@ -148,9 +136,9 @@
                               <jvmFlag>-Djava.security.egd=file:/dev/./urandom</jvmFlag>
                               <jvmFlag>-Dfile.encoding=UTF-8</jvmFlag>
                           </jvmFlags>
-<!--                              <ports>-->
-<!--                                  <port>8080</port>-->
-<!--                              </ports>-->
+                          <!--                              <ports>-->
+                          <!--                                  <port>8080</port>-->
+                          <!--                              </ports>-->
                           <mainClass>com.lundstad.playground.PlaygroundApplication</mainClass>
                       </container>
                       <extraDirectories>
@@ -158,12 +146,42 @@
                               <!-- Copies from 'src/main/custom-extra-dir' into '/' on the container. -->
                               <path>component-test/target/test-classes</path>
                               <!-- Copies from '/home/user/jib-extras' into '/extras' on the container -->
-<!--                              <path>-->
-<!--                                  <from>/home/user/jib-extras</from>-->
-<!--                                  <into>/extras</into>-->
-<!--                              </path>-->
+                              <!--                              <path>-->
+                              <!--                                  <from>/home/user/jib-extras</from>-->
+                              <!--                                  <into>/extras</into>-->
+                              <!--                              </path>-->
                           </paths>
                       </extraDirectories>
+                  </configuration>
+                  <executions>
+                      <execution>
+                          <phase>package</phase>
+                          <goals>
+                              <!--<goal>build</goal>-->
+                              <goal>dockerBuild</goal>
+                          </goals>
+                      </execution>
+                  </executions>
+          </plugin>
+      </plugins>
+
+      <pluginManagement>
+          <plugins>
+              <plugin>
+                  <artifactId>maven-resources-plugin</artifactId>
+                  <version>${maven-resources-plugin.version}</version>
+              </plugin>
+<!--              <plugin>-->
+<!--                  <groupId>io.swagger.core.v3</groupId>-->
+<!--                  <artifactId>swagger-maven-plugin</artifactId>-->
+<!--                  <version>${swagger-openapi.version}</version>-->
+<!--              </plugin>-->
+              <plugin>
+                  <groupId>org.springframework.boot</groupId>
+                  <artifactId>spring-boot-maven-plugin</artifactId>
+                  <configuration>
+<!--                      <skip>true</skip>-->
+                      <mainClass>com.lundstad.playground.PlaygroundApplication</mainClass>
                   </configuration>
               </plugin>
           </plugins>

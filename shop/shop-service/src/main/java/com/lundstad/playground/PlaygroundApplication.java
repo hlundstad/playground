@@ -24,6 +24,6 @@ public class PlaygroundApplication {
     @Bean
     public Quote quoteClient(RestTemplate restTemplate) {
         return restTemplate.getForObject(
-                "https://gturnquist-quoters.cfapps.io/api/random", Quote.class);
+                "https://freequote.herokuapp.com/", Quote.class);
     }
 }
