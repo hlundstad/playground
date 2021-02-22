@@ -1,5 +1,6 @@
 package com.lundstad.playground.api.v1;
 
+import com.lundstad.playground.EmployeeClient;
 import com.lundstad.playground.ProductClient;
 import com.lundstad.playground.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,17 @@ public class ProductController {
 
     @Autowired
     ProductClient productClient;
+    @Autowired
+    EmployeeClient employeeClient;
 
     @GetMapping("/fetchProducts")
     public String  getAllProducts() {
         return ResponseEntity.ok(productClient.getAllProducts()).toString();
+    }
+
+    @GetMapping("/fetchEmployees")
+    public String  getAllEmployees() {
+        return ResponseEntity.ok(employeeClient.getAllEmployees()).toString();
     }
 
 
