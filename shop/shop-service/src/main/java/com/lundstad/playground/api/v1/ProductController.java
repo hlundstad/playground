@@ -2,6 +2,7 @@ package com.lundstad.playground.api.v1;
 
 import com.lundstad.playground.EmployeeClient;
 import com.lundstad.playground.ProductClient;
+import com.lundstad.playground.model.Employee;
 import com.lundstad.playground.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +34,10 @@ public class ProductController {
     }
 
 
-    @GetMapping("/fetchProductss")
-    public String  getAllProductss() {
-        return ResponseEntity.ok(productClient.getAllProducts()).toString();
+    @PostMapping("/createemployees")
+    public  @ResponseBody Employee createEmployees( @RequestBody Employee employee) {
+        return employeeClient.createEmployee(employee);
     }
-
 
     @GetMapping("/fetchProduct/{id}")
     public ResponseEntity<Product> fetchProduct(@PathVariable int id) {

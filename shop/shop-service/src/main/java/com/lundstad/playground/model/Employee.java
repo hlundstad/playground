@@ -14,17 +14,8 @@ import lombok.ToString;
 //@JsonIgnoreProperties
 @ToString
 public class Employee {
-
-
-//    public Product(Integer id, String name, double price) {
-//        this.id = id;
-//        this.name = name;
-//        this.price = price;
-//        System.out.println("id: "+id + " name: "+ name + " price: "+price);
-//    }
-//    @JsonIgnoreProperties({ "id"})
-    private Object id;
-    private Object firstname;
-    private Object lastname;
-    private Object email;
+    private int id;
+    private String firstname;
+    private String lastname;
+    private String email;
 }
