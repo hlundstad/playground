@@ -39,7 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public Employee createEmployee(com.lundstad.employees.model.Employee modelEmployee) {
+    public Employee createEmployee(Employee modelEmployee) {
         EmployeeRecord rc = dsl.insertInto(EMPLOYEE)
                 .set(EMPLOYEE.FIRSTNAME, modelEmployee.getFirstname())
                 .set(EMPLOYEE.LASTNAME, modelEmployee.getLastname())

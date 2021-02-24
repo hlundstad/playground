@@ -31,5 +31,13 @@ public class HealthCheck implements HealthIndicator {
         System.out.println(errorCode);
         return errorCode;
     }
+//
+//    @Autowired
+//    private HomeController controller;
+//
+//    @Test
+//    public void contextLoads() throws Exception {
+//        assertThat(controller).isNotNull();
+//    }
 
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 @Service
 public interface EmployeeService {
 
-    Employee createEmployee(com.lundstad.employees.model.Employee employee);
+    Employee createEmployee(Employee employee);
 
     Employee updateEmployee( Employee employee );
 

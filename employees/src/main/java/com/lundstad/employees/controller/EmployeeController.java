@@ -4,7 +4,6 @@ import com.lundstad.employees.db.tables.tables.pojos.Employee;
 import com.lundstad.employees.db.tables.tables.pojos.EmployeeAddress;
 import com.lundstad.employees.exception.ResourceNotFoundException;
 import com.lundstad.employees.service.EmployeeService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,17 +37,15 @@ public class EmployeeController {
         return employeeServiceImpl.getEmployee(employeeId);
     }
 
-
     @PostMapping("/employees")
-    public Employee createEmployee(@Valid @RequestBody com.lundstad.employees.model.Employee employee) {
+    public @ResponseBody Employee createEmployee(@Valid @RequestBody Employee employee) {
         return employeeServiceImpl.createEmployee(employee);
     }
 
     @PutMapping("/employees/{id}")
-    public ResponseEntity <Employee> updateEmployee(@PathVariable(value = "id") int employeeId,
+    public @ResponseBody Employee updateEmployee(@PathVariable(value = "id") int employeeId,
                                                       @Valid @RequestBody Employee employeeDetails) {
-        Employee employee = employeeServiceImpl.updateEmployee(employeeDetails);
-        return ResponseEntity.ok(employee);
+        return employeeServiceImpl.updateEmployee(employeeDetails);
     }
 
     @DeleteMapping("/employees/{id}")
