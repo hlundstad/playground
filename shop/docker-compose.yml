@@ -1,24 +1,26 @@
 version: '3'
 
 services:
-#  shop-service:
-#    #name of image in dockerhub
-#    image: hlundstad/shop-service
-##    environment:
-##      - SPRING_CONFIG_NAME=component-test-properties
-#    #      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:8001"
-#    healthcheck:
-#      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-#      interval: 10s
-#      timeout: 10s
-#      retries: 3
-#    volumes:
-#      - ./etc/shop:/etc/shop
-##    depends_on:
-##      - product-service
-##      - mock-product-service
-#    ports:
-#      - "8084:8080"
+  shop-service:
+    #name of image in dockerhub
+    image: hlundstad/shop-service:0.0.1-SNAPSHOT
+#    environment:
+#      - SPRING_CONFIG_NAME=component-test-properties
+    #      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:8001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - ./etc/shop:/etc/shop
+#    depends_on:
+#      - product-service
+#      - mock-product-service
+    ports:
+      - "8084:8080"
+    networks:
+      - employees_shop_network
 
 
   product-service:
@@ -39,13 +41,13 @@ services:
     ports:
       - "8082:8080"
 
-#  component-test-service:
-#    image: rodolpheche/wiremock
-#    volumes:
-#        - ./local/shop-service-mock:/home/wiremock/mappings
-#    command: java -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --global-response-templating
-#    ports:
-#      - "8083:8080"
+  component-test-service:
+    image: rodolpheche/wiremock
+    volumes:
+        - ./local/shop-service-mock:/home/wiremock/mappings
+    command: java -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --global-response-templating
+    ports:
+      - "8083:8080"
 
   employees-service:
     image: hlundstad/employees-service:0.0.1-SNAPSHOT

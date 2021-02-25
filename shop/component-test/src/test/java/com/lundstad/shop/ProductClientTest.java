@@ -50,14 +50,9 @@ public class ProductClientTest extends AbstractShopTest {
     }
 
     @Test
-    public void wiremockGetProducts() {
-
-    }
-
-    @Test
-    public void fetchProductss() {
-        ResponseEntity<String> exchange  = restTemplate.exchange(SHOP_SERVICE_URL + "/fetchProductss",GET, null, new ParameterizedTypeReference<String>(){});
-        System.out.println("fetchProductss(): " +exchange.getBody());
+    public void fetchProducts() {
+        ResponseEntity<String> exchange  = restTemplate.exchange(SHOP_SERVICE_URL + "/fetchProducts",GET, null, new ParameterizedTypeReference<String>(){});
+        System.out.println("fetchProducts(): " +exchange.getBody());
         assertThat("Product service: fetchProducts", exchange.hasBody());  //jsonPath("$..id")
 
     }

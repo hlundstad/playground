@@ -70,9 +70,9 @@ class DBTest {
     @Test
 //    @Rollback(true)
     void testInsertIntoEmployee(){
-        com.lundstad.employees.model.Employee modelEmployee = new com.lundstad.employees.model.Employee(null,"Dole", "Duck", "dole1@email1.com");
-        com.lundstad.employees.db.tables.tables.pojos.Employee resultEmployee  = employeeServiceImp.createEmployee(modelEmployee);
-        assertEquals(resultEmployee.getFirstname(),modelEmployee.getFirstname());
+        Employee employee = new Employee(null,"Dole", "Duck", "dole1@email1.com");
+        com.lundstad.employees.db.tables.tables.pojos.Employee resultEmployee  = employeeServiceImp.createEmployee(employee);
+        assertEquals(resultEmployee.getFirstname(),employee.getFirstname());
     }
 
 

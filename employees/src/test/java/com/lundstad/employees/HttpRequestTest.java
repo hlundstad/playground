@@ -9,10 +9,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Transactional
 @AutoConfigureMockMvc
 @SpringBootTest
 class HttpRequestTest {
@@ -51,4 +53,30 @@ class HttpRequestTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value("1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].firstname").value("Donald"));
     }
+
+    @Test
+    void updateOneEmployee() throws Exception {
+        String uri = "/employees/1";
+       String updatedEmployee = "{\"id\": 1,\"firstname\": \"Donaldd\",\"lastname\": \"Duck\", \"email\": \"duck@gmail1.com\" }";
+
+        mvc.perform( MockMvcRequestBuilders
+                .put(uri).content(updatedEmployee).contentType("application/json")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstname").value("Donaldd"));
+    }
+
+
+    @Test
+    void createOneEmployee() throws Exception {
+        String uri = "/employees/";
+        String updatedEmployee = "{\"firstname\": \"Donaldd\",\"lastname\": \"Duck\", \"email\": \"duck@gmail1.com\" }";
+
+        mvc.perform( MockMvcRequestBuilders
+                .post(uri).content(updatedEmployee).contentType("application/json")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstname").value("Donaldd"));
+    }
+
 }

@@ -5,11 +5,17 @@ services:
     volumes:
     - "./:/project"
     - "~/.m2:/root/.m2"
-#    ports:
-#      - "9000:8000"
     ports:
-      - "8084:8080"
+      - "9000:8000"
+#    ports:
+#      - "8084:8080"
     working_dir: /project/component-test
 #    command: "mvn -U -Dcomponent=true -Dmaven.surefire.debug='-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:8000' test"
     command: "mvn -Dcomponent=true -U test"
+    networks:
+      - employees_shop_network
+
+#networks:
+#  employees_shop_network:
+#    external: true
 
