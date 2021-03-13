@@ -279,7 +279,7 @@
                 </executions>
                 <configuration>
                     <apiDocsUrl>http://localhost:8088/v3/api-docs</apiDocsUrl>
-                    <outputFileName>provider_openapi.yml</outputFileName>
+                    <outputFileName>provider_openapi.json</outputFileName>
                     <outputDir>target/generated-sources/openapi</outputDir>
                     <skip>false</skip>
                 </configuration>
