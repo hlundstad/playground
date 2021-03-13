@@ -18,11 +18,9 @@ import static com.lundstad.employees.db.tables.tables.EmployeeAddress.EMPLOYEE_A
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeDao employeeDao;
-
-//    @Autowired
     private final DSLContext dsl;
     final TransactionTemplate transactionTemplate;
-    com.lundstad.employees.db.tables.tables.Employee employee;
+    Employee employee;
 
 //    @Autowired
     public EmployeeServiceImpl(DSLContext dsl, Configuration jooqConfiguration,

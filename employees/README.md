@@ -12,5 +12,7 @@ mvn flyway:migrate
  
 RUN apt-get update && apt-get install curl -y
 
+http://localhost:8090/api-docs
+http://localhost:8090/api-docs.yaml/ 
 localhost:8090/actuator/health 
-mvn clean install -Ddb.url=jdbc:oracle:thin:@localhost:1521/ORCLPDB1 -Dspring.datasource.url=jdbc:oracle:thin:@localhost:1521/ORCLPDB1 
+mvn clean install -Ddb.url=jdbc:oracle:thin:@localhost:1522/ORCLPDB1 -Dspring.datasource.url=jdbc:oracle:thin:@localhost:1522/ORCLPDB1 
