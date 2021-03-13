@@ -1,7 +1,7 @@
 package com.lundstad.providers;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lundstad.providers.db.tables.tables.pojos.Provider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,26 +15,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 //@WebMvcTest
 @AutoConfigureMockMvc
-@SpringBootTest
-public class MockMvcTests {
+@SpringBootTest class MockMvcTests {
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    public void getProduct() throws Exception {
+     void getProvider() throws Exception {
 
-        MvcResult resultActions = this.mockMvc.perform(get("/provider/{id}", 1))
+        MvcResult resultActions = this.mockMvc.perform(get("/provider/1", 1))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
-        assertTrue(resultActions.getResponse().getContentAsString().contains("Peter"));
+        assertTrue(resultActions.getResponse().getContentAsString().contains("Aliko"));
     }
 
     @Test
-    public void getProduct2() throws Exception {
-        String nameJason = "{\"firstname\":\"Peter\"}";
-        Provider expected = new Provider(1, "Peter", "Olsen");
-        mockMvc.perform(get("/provider/{id}", 1))
+     void getProvider2() throws Exception {
+        Provider expected = new Provider(2,"Bill","Gates","fol@gmail1.com");
+        mockMvc.perform(get("/provider/2", 1))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(ResponseBodyMatchers.responseBody().containsObjectAsJson(expected, Provider.class));

@@ -1,7 +1,6 @@
 package com.lundstad.providers;
 
 
-
 public class HealthResource {
 
     static final String PATH = "health";

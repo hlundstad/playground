@@ -1,11 +1,13 @@
 package com.lundstad.providers;
 
+import com.lundstad.providers.db.tables.tables.pojos.Provider;
+
 import java.util.Collection;
 
 public interface ProviderService {
-    void createProvider(Provider product);
+    Provider createProvider(Provider provider);
 
-    void updateProvider(int id, Provider product);
+    void updateProvider(int id, Provider provider);
 
     void deleteProvider(int id);
 

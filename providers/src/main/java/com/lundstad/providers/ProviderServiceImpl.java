@@ -1,57 +1,56 @@
 package com.lundstad.providers;
 
+import com.lundstad.providers.db.tables.tables.daos.ProviderDao;
+import com.lundstad.providers.db.tables.tables.pojos.Provider;
+import com.lundstad.providers.db.tables.tables.records.ProviderRecord;
+import org.jooq.Configuration;
+import org.jooq.DSLContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+
+import static com.lundstad.providers.db.tables.tables.Provider.PROVIDER;
 
 @Service
 public class ProviderServiceImpl implements ProviderService {
-    private static int i=0;
-    private static final Map<Integer, Provider> providerRepo = new HashMap<>();
+    final TransactionTemplate transactionTemplate;
+    private final ProviderDao providerDao;
+    private final DSLContext dsl;
 
-
-    static {
-        setupRepo();
-    }
-
-    public static void setupRepo(){
-        Provider a = new Provider(++i,"Peter","Olsen");
-        providerRepo.put(a.getId(), a);
-        Provider b = new Provider(++i,"Donald","Trump");
-        providerRepo.put(b.getId(), b);
-        Provider c = new Provider(++i,"Joe","Biden");
-        providerRepo.put(c.getId(), c);
-
+    public ProviderServiceImpl(DSLContext dsl, Configuration jooqConfiguration,
+                               TransactionTemplate transactionTemplate) {
+        this.providerDao = new ProviderDao(jooqConfiguration);
+        this.dsl = dsl;
+        this.transactionTemplate = transactionTemplate;
     }
 
     @Override
-    public void createProvider(Provider provider) {
-        providerRepo.put(provider.getId(), provider);
+    public Provider createProvider(Provider newProvider) {
+        ProviderRecord rc = dsl.insertInto(PROVIDER)
+                .set(PROVIDER.FIRSTNAME, newProvider.getFirstname())
+                .set(PROVIDER.LASTNAME, newProvider.getLastname())
+                .set(PROVIDER.EMAIL, newProvider.getEmail())
+                .returning()
+                .fetchOne();
+        return rc.into(Provider.class);
     }
 
     @Override
     public void updateProvider(int id, Provider product) {
-
     }
 
     @Override
     public void deleteProvider(int id) {
-
     }
 
     @Override
     public Collection<Provider> getProviders() {
-        return providerRepo.values();
+        return this.providerDao.findAll();
     }
 
     @Override
     public Provider getProvider(int id) {
-        return providerRepo.get(id);
-    }
-
-    public static int getCounter(){
-        return i;
+        return this.providerDao.findById(id);
     }
 }
