@@ -5,10 +5,13 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 //@Component
 public class ProductServiceImpl implements ProductService {
+    private static final Logger LOG = LoggerFactory.getLogger(ProductServiceImpl.class);
     private static final Map<Integer, Product> productRepo = new HashMap<>();
     private static int i=0;
 
@@ -24,6 +27,7 @@ public class ProductServiceImpl implements ProductService {
     }
     public static void setupRepo(){
         Product honey = new Product(++i,"Honey",20D);
+        LOG.debug("Lagt til nytt product for debug {}", i, "Honey",20D);
         productRepo.put(honey.getId(), honey);
         Product coffee = new Product(++i,"Coffe",10D);
         productRepo.put(coffee.getId(), coffee);
