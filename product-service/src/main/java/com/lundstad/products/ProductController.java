@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,8 @@ import java.util.Collection;
 public class ProductController {
 
     public static final String TAG = "Produktregister";
+    Logger logger = LoggerFactory.getLogger(ProductController.class);
+
 
     @Autowired
     ProductService productService;
@@ -55,6 +59,11 @@ public class ProductController {
 
     @GetMapping("/products2")
     public ResponseEntity<Object> getProduct2() {
+        logger.trace("A TRACE Message");
+        logger.debug("A DEBUG Message");
+        logger.info("An INFO Message");
+        logger.warn("A WARN Message");
+        logger.error("An ERROR Message");
         return new ResponseEntity<>(productService.getProducts(), HttpStatus.OK);
     }
 
@@ -71,6 +80,11 @@ public class ProductController {
     @ApiResponses(@ApiResponse(responseCode = "200", description = "Beskrivelse", content = @Content(schema = @Schema(implementation = Product.class))))
     @Operation(tags = TAG, description = "Returnerer beskrivelse")
     public ResponseEntity<Object>greeting() {
+        logger.trace("A TRACE Message");
+        logger.debug("A DEBUG Message");
+        logger.info("An INFO Message");
+        logger.warn("A WARN Message");
+        logger.error("An ERROR Message");
         return new ResponseEntity<>("Denne applikasjonen returnerer produkter", HttpStatus.OK);
     }
 
