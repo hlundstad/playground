@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.Date;
 
 @RestController
 public class ProviderController {
@@ -23,6 +24,11 @@ public class ProviderController {
     @GetMapping(value = "/greeting")
     public ResponseEntity<Object> greeting() {
         return new ResponseEntity<>("Denne applikasjonen returnerer providers", HttpStatus.OK);
+    }
+
+    @RequestMapping("/")
+    public String index() {
+        return "Hello, the time at the provider server is now " + new Date() + "\n";
     }
 
     @GetMapping(value = "/providers")
