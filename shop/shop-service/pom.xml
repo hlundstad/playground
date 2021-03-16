@@ -10,7 +10,6 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.lundstad</groupId>
     <artifactId>shop-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
@@ -26,6 +25,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.5.1</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -55,11 +59,11 @@
             <artifactId>feign-gson</artifactId>
             <version>${feign.version}</version>
         </dependency>
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-slf4j</artifactId>
-            <version>${feign.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.github.openfeign</groupId>-->
+<!--            <artifactId>feign-slf4j</artifactId>-->
+<!--            <version>${feign.version}</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -96,16 +100,21 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--        <dependency>-->
-<!--            <groupId>javax.ws.rs</groupId>-->
-<!--            <artifactId>jsr311-api</artifactId>-->
-<!--            <version>1.1.1</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>javax.ws.rs</groupId>-->
-<!--            <artifactId>javax.ws.rs-api</artifactId>-->
-<!--            <version>2.1.1</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>7.0</version>
+        </dependency>
     </dependencies>
     <build>
         <testSourceDirectory>
@@ -113,61 +122,35 @@
         </testSourceDirectory>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <artifactId>maven-source-plugin</artifactId>
             </plugin>
-
-<!--            <plugin>-->
-<!--                <groupId>io.swagger.core.v3</groupId>-->
-<!--                <artifactId>swagger-maven-plugin</artifactId>-->
-<!--                <version>2.1.1</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>generate-${api-spec}</id>-->
-<!--                        <phase>package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>resolve</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <contextId>openapi-${api-spec}</contextId>-->
-<!--                            <outputPath>${project.build.directory}/api-spec</outputPath>-->
-<!--                            <resourceClasses>-->
-<!--                                <resourceClass>com.lundstad.playground.api.v1.ProductController</resourceClass>-->
-<!--                            </resourceClasses>-->
-<!--                            <outputFileName>${api-spec}</outputFileName>-->
-<!--                            <prettyPrint>true</prettyPrint>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
-
-
-<!--            <plugin>-->
-<!--                <groupId>io.swagger.core.v3</groupId>-->
-<!--                <artifactId>swagger-maven-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <outputPath>${project.build.directory}/api-spec/</outputPath>-->
-<!--                </configuration>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>demo-client-api-v1</id>-->
-<!--                        <phase>compile</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>resolve</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <resourcePackages>no.lundstad.demo.client.api.v1</resourcePackages>-->
-<!--                            <outputFileName>${openapi-spec.name}</outputFileName>-->
-<!--                            <prettyPrint>true</prettyPrint>-->
-<!--                            <contextId>${openapi-spec.name}</contextId>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
-
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>4.3.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/provider_openapi.yml
+                            </inputSpec>
+                            <generatorName>spring</generatorName>
+                            <apiPackage>io.reflectoring.api</apiPackage>
+                            <modelPackage>io.reflectoring.model</modelPackage>
+                            <supportingFilesToGenerate>
+                                ApiUtil.java
+                            </supportingFilesToGenerate>
+                            <configOptions>
+                                <interfaceOnly>true</interfaceOnly>
+                                <delegatePattern>true</delegatePattern>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 

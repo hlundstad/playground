@@ -41,13 +41,13 @@ services:
     ports:
       - "8082:8080"
 
-  component-test-service:
-    image: rodolpheche/wiremock
-    volumes:
-        - ./local/shop-service-mock:/home/wiremock/mappings
-    command: java -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --global-response-templating
-    ports:
-      - "8083:8080"
+#  component-test-service:
+#    image: rodolpheche/wiremock
+#    volumes:
+#        - ./local/shop-service-mock:/home/wiremock/mappings
+#    command: java -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --global-response-templating
+#    ports:
+#      - "8083:8080"
 
   employees-service:
     image: hlundstad/employees-service:0.0.1-SNAPSHOT
@@ -55,6 +55,13 @@ services:
       - "8090:8090"
     networks:
       - employees_shop_network
+
+  providers-service:
+    image: hlundstad/providers-service:0.0.1-SNAPSHOT
+    ports:
+      - "8088:8088"
+    networks:
+        - employees_shop_network
 #    depends_on:
 #      oracle:
 #        condition: service_healthy

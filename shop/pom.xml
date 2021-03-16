@@ -37,9 +37,9 @@
     </modules>
 <!--<dependencies>-->
 <!--    <dependency>-->
-<!--        <groupId>com.lundstad</groupId>-->
-<!--        <artifactId>employees</artifactId>-->
-<!--        <version>0.0.1-SNAPSHOT</version>-->
+<!--        <groupId>org.springdoc</groupId>-->
+<!--        <artifactId>springdoc-openapi-ui</artifactId>-->
+<!--        <version>1.5.1</version>-->
 <!--    </dependency>-->
 <!--</dependencies>-->
     <dependencyManagement>
@@ -118,6 +118,9 @@
                   <artifactId>jib-maven-plugin</artifactId>
                   <version>${jib-maven-plugin.version}</version>
                   <configuration>
+                      <from>
+                          <image>openjdk:11-jre-slim</image>
+                      </from>
                       <!--                      <containerizingMode>packaged</containerizingMode>-->
                       <skip>${skip.docker}</skip>
                       <!--                          <from>-->
@@ -171,19 +174,15 @@
                   <artifactId>maven-resources-plugin</artifactId>
                   <version>${maven-resources-plugin.version}</version>
               </plugin>
+              <plugin>
+                  <groupId>org.springframework.boot</groupId>
+                  <artifactId>spring-boot-maven-plugin</artifactId>
+              </plugin>
 <!--              <plugin>-->
 <!--                  <groupId>io.swagger.core.v3</groupId>-->
 <!--                  <artifactId>swagger-maven-plugin</artifactId>-->
 <!--                  <version>${swagger-openapi.version}</version>-->
 <!--              </plugin>-->
-              <plugin>
-                  <groupId>org.springframework.boot</groupId>
-                  <artifactId>spring-boot-maven-plugin</artifactId>
-                  <configuration>
-<!--                      <skip>true</skip>-->
-                      <mainClass>com.lundstad.playground.PlaygroundApplication</mainClass>
-                  </configuration>
-              </plugin>
           </plugins>
       </pluginManagement>
 
