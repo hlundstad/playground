@@ -18,7 +18,7 @@
 <!--        <servlet-api.version>3.0.1</servlet-api.version>-->
 <!--        <tomcat.version>8.5.37</tomcat.version>-->
         <org.jooq.version>3.14.4</org.jooq.version>
-        <db.url>jdbc:oracle:thin:@shop_oracle19:1521/ORCLPDB1</db.url>
+        <db.url>jdbc:oracle:thin:@shop_oracle19:1522/ORCLPDB1</db.url>
         <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
 <!--        <db.url>jdbc:oracle:thin:@localhost:1521/ORCLPDB1</db.url>-->
 <!--        <flyway.url>jdbc:oracle:thin:@oracle19:1521/ORCLPDB1</flyway.url>-->
